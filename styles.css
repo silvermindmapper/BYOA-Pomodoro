@@ -391,4 +391,134 @@ input:checked + .slider:before {
     0% { transform: scale(1); }
     50% { transform: scale(1.2); }
     100% { transform: scale(1); }
+}
+
+/* Current Task Display */
+.current-task {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    min-height: 1.5rem;
+    font-size: clamp(0.9rem, 3vw, 1rem);
+    color: var(--text);
+    font-weight: 500;
+}
+
+.current-task .task-label {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background-color: rgba(123, 125, 238, 0.1);
+    color: var(--primary);
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
+body.rest-mode .current-task .task-label {
+    background-color: rgba(52, 211, 153, 0.1);
+    color: var(--secondary-dark);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+    transition: var(--transition);
+}
+
+.close-modal:hover {
+    color: var(--heading);
+}
+
+.modal h3 {
+    margin-bottom: 1.5rem;
+    color: var(--heading);
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+#task-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--heading);
+    background-color: var(--background);
+    outline: none;
+    transition: var(--transition);
+    margin-bottom: 1.5rem;
+}
+
+#task-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+#skip-task {
+    background-color: transparent;
+    border-color: var(--text);
+    color: var(--text);
+}
+
+#skip-task:hover {
+    border-color: var(--heading);
+    color: var(--heading);
+}
+
+#save-task {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+#save-task:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
 } 

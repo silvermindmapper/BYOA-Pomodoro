@@ -18,6 +18,9 @@
                 <span id="rest-emoji" class="mode-emoji">😮‍💨</span>
             </button>
         </div>
+        <div id="current-task" class="current-task">
+            <span class="task-label"></span>
+        </div>
         <div class="timer-display">
             <span id="minutes">25</span><span class="separator">:</span><span id="seconds">00</span>
         </div>
@@ -30,6 +33,22 @@
             <button id="add-time" class="add-time-btn">+5 Min</button>
         </div>
     </div>
+
+    <!-- Task Input Modal -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>What are you working on?</h3>
+            <form id="task-form">
+                <input type="text" id="task-input" placeholder="Enter your task..." autofocus>
+                <div class="modal-buttons">
+                    <button type="button" id="skip-task">Skip</button>
+                    <button type="submit" id="save-task">Start Timer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html> 

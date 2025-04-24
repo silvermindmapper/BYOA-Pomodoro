@@ -8,6 +8,13 @@ const addTimeBtn = document.getElementById('add-time');
 const modeBtn = document.getElementById('mode-button');
 const workEmoji = document.getElementById('work-emoji');
 const restEmoji = document.getElementById('rest-emoji');
+const taskModal = document.getElementById('task-modal');
+const taskForm = document.getElementById('task-form');
+const taskInput = document.getElementById('task-input');
+const saveTaskBtn = document.getElementById('save-task');
+const skipTaskBtn = document.getElementById('skip-task');
+const closeModalBtn = document.querySelector('.close-modal');
+const currentTaskEl = document.querySelector('.task-label');
 
 // Timer variables
 let interval;
@@ -17,6 +24,7 @@ const WORK_TIME = 25 * 60; // 25 minutes in seconds
 const REST_TIME = 5 * 60; // 5 minutes in seconds
 const FIVE_MINUTES = 5 * 60; // 5 minutes in seconds
 let originalTitle = document.title;
+let currentTask = '';
 
 // Initialize timer
 let isWorkMode = true;
@@ -27,16 +35,92 @@ updateTimerDisplay();
 workEmoji.classList.add('active');
 restEmoji.classList.remove('active');
 
+// Load saved task if exists
+loadTaskFromStorage();
+
 // Event listeners
-startBtn.addEventListener('click', startTimer);
+startBtn.addEventListener('click', handleStartClick);
 pauseBtn.addEventListener('click', pauseTimer);
 resetBtn.addEventListener('click', resetTimer);
 addTimeBtn.addEventListener('click', addFiveMinutes);
 modeBtn.addEventListener('click', toggleMode);
+closeModalBtn.addEventListener('click', closeModal);
+skipTaskBtn.addEventListener('click', function() {
+    closeModal();
+    actuallyStartTimer();
+});
+taskForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    saveTask();
+});
+
+// Handle modal clicks outside the content
+window.addEventListener('click', function(event) {
+    if (event.target === taskModal) {
+        closeModal();
+    }
+});
 
 // Set up notification permissions
 if ('Notification' in window && Notification.permission !== 'denied') {
     Notification.requestPermission();
+}
+
+// Show modal when start is clicked in work mode
+function handleStartClick() {
+    if (isRunning) return;
+    
+    if (isWorkMode && !currentTask) {
+        openTaskModal();
+    } else {
+        actuallyStartTimer();
+    }
+}
+
+// Open the task modal
+function openTaskModal() {
+    taskModal.classList.add('show');
+    setTimeout(() => {
+        taskInput.focus();
+    }, 300);
+}
+
+// Close the task modal
+function closeModal() {
+    taskModal.classList.remove('show');
+}
+
+// Save the task
+function saveTask() {
+    currentTask = taskInput.value.trim();
+    
+    if (currentTask) {
+        // Update the task display
+        currentTaskEl.textContent = currentTask;
+        
+        // Save to localStorage
+        localStorage.setItem('focusTimerTask', currentTask);
+    }
+    
+    closeModal();
+    actuallyStartTimer();
+}
+
+// Load task from storage
+function loadTaskFromStorage() {
+    const savedTask = localStorage.getItem('focusTimerTask');
+    
+    if (savedTask) {
+        currentTask = savedTask;
+        currentTaskEl.textContent = currentTask;
+    }
+}
+
+// Clear task when done
+function clearTask() {
+    currentTask = '';
+    currentTaskEl.textContent = '';
+    localStorage.removeItem('focusTimerTask');
 }
 
 // Function to add 5 minutes to the timer
@@ -57,7 +141,7 @@ function addFiveMinutes() {
 }
 
 // Timer functions
-function startTimer() {
+function actuallyStartTimer() {
     if (isRunning) return;
     
     // Visual feedback for button press
@@ -72,6 +156,11 @@ function startTimer() {
             endTimer();
             notifyUser();
             updateTabTitle("Time Up!");
+            
+            // Clear task when timer ends if in work mode
+            if (isWorkMode) {
+                clearTask();
+            }
         }
     }, 1000);
 }
@@ -190,6 +279,8 @@ pauseBtn.addEventListener('click', clearTitleFlash);
 resetBtn.addEventListener('click', clearTitleFlash);
 addTimeBtn.addEventListener('click', clearTitleFlash);
 modeBtn.addEventListener('click', clearTitleFlash);
+skipTaskBtn.addEventListener('click', clearTitleFlash);
+saveTaskBtn.addEventListener('click', clearTitleFlash);
 
 function notifyUser() {
     // Play sound
