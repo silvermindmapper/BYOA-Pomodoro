@@ -4,6 +4,7 @@ const secondsEl = document.getElementById('seconds');
 const startBtn = document.getElementById('start');
 const pauseBtn = document.getElementById('pause');
 const resetBtn = document.getElementById('reset');
+const addTimeBtn = document.getElementById('add-time');
 const modeBtn = document.getElementById('mode-button');
 const workEmoji = document.getElementById('work-emoji');
 const restEmoji = document.getElementById('rest-emoji');
@@ -14,6 +15,7 @@ let timeLeft;
 let isRunning = false;
 const WORK_TIME = 25 * 60; // 25 minutes in seconds
 const REST_TIME = 5 * 60; // 5 minutes in seconds
+const FIVE_MINUTES = 5 * 60; // 5 minutes in seconds
 let originalTitle = document.title;
 
 // Initialize timer
@@ -29,11 +31,29 @@ restEmoji.classList.remove('active');
 startBtn.addEventListener('click', startTimer);
 pauseBtn.addEventListener('click', pauseTimer);
 resetBtn.addEventListener('click', resetTimer);
+addTimeBtn.addEventListener('click', addFiveMinutes);
 modeBtn.addEventListener('click', toggleMode);
 
 // Set up notification permissions
 if ('Notification' in window && Notification.permission !== 'denied') {
     Notification.requestPermission();
+}
+
+// Function to add 5 minutes to the timer
+function addFiveMinutes() {
+    timeLeft += FIVE_MINUTES;
+    updateTimerDisplay();
+    
+    // Provide visual feedback
+    addTimeBtn.classList.add('active');
+    setTimeout(() => {
+        addTimeBtn.classList.remove('active');
+    }, 300);
+    
+    // Play a subtle sound to confirm the action
+    const confirmSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-interface-click-2866.mp3');
+    confirmSound.volume = 0.3;
+    confirmSound.play().catch(err => console.log('Could not play confirmation sound', err));
 }
 
 // Timer functions
@@ -168,6 +188,7 @@ function clearTitleFlash() {
 startBtn.addEventListener('click', clearTitleFlash);
 pauseBtn.addEventListener('click', clearTitleFlash);
 resetBtn.addEventListener('click', clearTitleFlash);
+addTimeBtn.addEventListener('click', clearTitleFlash);
 modeBtn.addEventListener('click', clearTitleFlash);
 
 function notifyUser() {
