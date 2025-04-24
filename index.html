@@ -10,37 +10,66 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Focus Timer</h1>
-            <button id="mode-button" class="mode-button" aria-label="Toggle between focus and break modes">
-                <span id="work-emoji" class="mode-emoji active">🤓</span>
-                <span id="rest-emoji" class="mode-emoji">😮‍💨</span>
-            </button>
-        </div>
-        <div id="current-task" class="current-task">
-            <span class="task-label"></span>
-        </div>
-        <div class="timer-display">
-            <span id="minutes">25</span><span class="separator">:</span><span id="seconds">00</span>
-        </div>
-        <div class="timer-buttons">
-            <div class="timer-controls">
-                <button id="start">Start</button>
-                <button id="pause">Pause</button>
-                <button id="reset">Reset</button>
+    <div class="app-wrapper">
+        <div class="container main-container">
+            <div class="header">
+                <h1>Focus Timer</h1>
+                <button id="mode-button" class="mode-button" aria-label="Toggle between focus and break modes">
+                    <span id="work-emoji" class="mode-emoji active">🤓</span>
+                    <span id="rest-emoji" class="mode-emoji">😮‍💨</span>
+                </button>
             </div>
-            <button id="add-time" class="add-time-btn">+5 Min</button>
+            <div id="current-task" class="current-task">
+                <span class="task-label"></span>
+            </div>
+            <div class="timer-display">
+                <span id="minutes">25</span><span class="separator">:</span><span id="seconds">00</span>
+            </div>
+            <div class="timer-buttons">
+                <div class="timer-controls">
+                    <button id="start">Start</button>
+                    <button id="pause">Pause</button>
+                    <button id="reset">Reset</button>
+                </div>
+                <button id="add-time" class="add-time-btn">+5 Min</button>
+            </div>
+        </div>
+        
+        <div class="container tracker-container">
+            <h2 class="tracker-title">Focus Tracker</h2>
+            <div class="tracker-stats">
+                <span class="stat-badge focus-badge">Focus: <span id="focus-count">0</span></span>
+                <span class="stat-badge break-badge">Breaks: <span id="break-count">0</span></span>
+            </div>
+            <div class="topic-list" id="topic-list">
+                <!-- Topic items will be added here dynamically -->
+                <div class="empty-state">
+                    Complete your first focus session to start tracking!
+                </div>
+            </div>
+            <button id="clear-stats" class="clear-stats-btn">Clear Stats</button>
         </div>
     </div>
 
-    <!-- Task Input Modal -->
+    <!-- Topic Input Modal -->
     <div id="task-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             <h3>What are you working on?</h3>
             <form id="task-form">
-                <input type="text" id="task-input" placeholder="Enter your task..." autofocus>
+                <div class="form-group">
+                    <label for="topic-select">Topic:</label>
+                    <div class="select-wrapper">
+                        <select id="topic-select">
+                            <option value="">-- Select a topic --</option>
+                            <!-- Existing topics will be added here dynamically -->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new-topic">Or add a new topic:</label>
+                    <input type="text" id="new-topic" placeholder="New topic name...">
+                </div>
                 <div class="modal-buttons">
                     <button type="button" id="skip-task">Skip</button>
                     <button type="submit" id="save-task">Start Timer</button>
