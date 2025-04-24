@@ -4,9 +4,9 @@ const secondsEl = document.getElementById('seconds');
 const startBtn = document.getElementById('start');
 const pauseBtn = document.getElementById('pause');
 const resetBtn = document.getElementById('reset');
-const modeToggle = document.getElementById('mode-toggle');
-const workLabel = document.getElementById('work-label');
-const restLabel = document.getElementById('rest-label');
+const modeBtn = document.getElementById('mode-button');
+const workEmoji = document.getElementById('work-emoji');
+const restEmoji = document.getElementById('rest-emoji');
 
 // Timer variables
 let interval;
@@ -21,16 +21,15 @@ let isWorkMode = true;
 timeLeft = WORK_TIME;
 updateTimerDisplay();
 
-// Set initial mode display
-workLabel.classList.add('active');
-restLabel.classList.remove('active');
-modeToggle.checked = false;
+// Set initial mode display - work emoji is active by default
+workEmoji.classList.add('active');
+restEmoji.classList.remove('active');
 
 // Event listeners
 startBtn.addEventListener('click', startTimer);
 pauseBtn.addEventListener('click', pauseTimer);
 resetBtn.addEventListener('click', resetTimer);
-modeToggle.addEventListener('change', toggleMode);
+modeBtn.addEventListener('click', toggleMode);
 
 // Set up notification permissions
 if ('Notification' in window && Notification.permission !== 'denied') {
@@ -80,20 +79,26 @@ function endTimer() {
 
 function toggleMode() {
     pauseTimer();
-    isWorkMode = !modeToggle.checked;
+    isWorkMode = !isWorkMode;
     
-    // Update the active label
+    // Update the active emoji
     if (isWorkMode) {
-        workLabel.classList.add('active');
-        restLabel.classList.remove('active');
+        workEmoji.classList.add('active');
+        restEmoji.classList.remove('active');
         timeLeft = WORK_TIME;
         document.body.classList.remove('rest-mode');
     } else {
-        workLabel.classList.remove('active');
-        restLabel.classList.add('active');
+        workEmoji.classList.remove('active');
+        restEmoji.classList.add('active');
         timeLeft = REST_TIME;
         document.body.classList.add('rest-mode');
     }
+    
+    // Add animation to the mode button
+    modeBtn.classList.add('animating');
+    setTimeout(() => {
+        modeBtn.classList.remove('animating');
+    }, 300);
     
     updateTimerDisplay();
 }
@@ -110,8 +115,8 @@ function updateTimerDisplay() {
 }
 
 function updateTabTitle(time) {
-    const mode = isWorkMode ? 'Focus' : 'Break';
-    document.title = `${time} - ${mode}`;
+    const mode = isWorkMode ? '🤓' : '😮‍💨';
+    document.title = `${time} ${mode}`;
     
     // If timer is at zero, add attention-grabbing animation to the tab title
     if (time === "Time Up!") {
@@ -123,7 +128,8 @@ function updateTabTitle(time) {
 let titleFlashInterval;
 function startTitleFlash() {
     let flashState = true;
-    const mode = isWorkMode ? 'Focus' : 'Break';
+    const mode = isWorkMode ? '🤓' : '😮‍💨';
+    const modeText = isWorkMode ? 'Focus' : 'Break';
     
     // Clear any existing flash interval
     if (titleFlashInterval) {
@@ -133,9 +139,9 @@ function startTitleFlash() {
     // Flash the title every 1 second
     titleFlashInterval = setInterval(() => {
         if (flashState) {
-            document.title = `Time Up! - ${mode}`;
+            document.title = `Time Up! ${mode}`;
         } else {
-            document.title = `⏰ ${mode} Complete!`;
+            document.title = `⏰ ${modeText} Complete!`;
         }
         flashState = !flashState;
     }, 1000);
@@ -145,7 +151,7 @@ function startTitleFlash() {
         if (titleFlashInterval) {
             clearInterval(titleFlashInterval);
             titleFlashInterval = null;
-            document.title = `Time Up! - ${mode}`;
+            document.title = `Time Up! ${mode}`;
         }
     }, 10000);
 }
@@ -162,7 +168,7 @@ function clearTitleFlash() {
 startBtn.addEventListener('click', clearTitleFlash);
 pauseBtn.addEventListener('click', clearTitleFlash);
 resetBtn.addEventListener('click', clearTitleFlash);
-modeToggle.addEventListener('change', clearTitleFlash);
+modeBtn.addEventListener('click', clearTitleFlash);
 
 function notifyUser() {
     // Play sound

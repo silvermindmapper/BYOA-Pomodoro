@@ -11,19 +11,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>Focus Timer</h1>
+        <div class="header">
+            <h1>Focus Timer</h1>
+            <button id="mode-button" class="mode-button" aria-label="Toggle between focus and break modes">
+                <span id="work-emoji" class="mode-emoji active">🤓</span>
+                <span id="rest-emoji" class="mode-emoji">😮‍💨</span>
+            </button>
+        </div>
         <div class="timer-display">
             <span id="minutes">25</span><span class="separator">:</span><span id="seconds">00</span>
-        </div>
-        <div class="mode-toggle">
-            <label class="switch">
-                <input type="checkbox" id="mode-toggle">
-                <span class="slider"></span>
-            </label>
-            <div class="mode-labels">
-                <span id="work-label" class="active">Focus</span>
-                <span id="rest-label">Break</span>
-            </div>
         </div>
         <div class="timer-controls">
             <button id="start">Start</button>
