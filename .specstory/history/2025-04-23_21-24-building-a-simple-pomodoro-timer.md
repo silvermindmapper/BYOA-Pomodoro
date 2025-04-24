@@ -1858,6 +1858,196 @@ Read file: script.js
 
 ---
 
+```diff
+  const WORK_TIME = 25 * 60; // 25 minutes in seconds
+  const REST_TIME = 5 * 60; // 5 minutes in seconds
++ let originalTitle = document.title;
+  
+  // Initialize timer
+              endTimer();
+              notifyUser();
++             updateTabTitle("Time Up!");
+          }
+      }, 1000);
+      secondsEl.textContent = seconds.toString().padStart(2, '0');
+      
+-     // Update document title to show current time and mode
++     // Update tab title with the current time
++     updateTabTitle(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
++ }
++ 
++ function updateTabTitle(time) {
++     const mode = isWorkMode ? 'Focus' : 'Break';
++     document.title = `${time} - ${mode}`;
++     
++     // If timer is at zero, add attention-grabbing animation to the tab title
++     if (time === "Time Up!") {
++         startTitleFlash();
++     }
++ }
++ 
++ // Flash the title between "Time Up!" and the mode to grab attention
++ let titleFlashInterval;
++ function startTitleFlash() {
++     let flashState = true;
+      const mode = isWorkMode ? 'Focus' : 'Break';
+-     document.title = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} - ${mode}`;
+- }
++     
++     // Clear any existing flash interval
++     if (titleFlashInterval) {
++         clearInterval(titleFlashInterval);
++     }
++     
++     // Flash the title every 1 second
++     titleFlashInterval = setInterval(() => {
++         if (flashState) {
++             document.title = `Time Up! - ${mode}`;
++         } else {
++             document.title = `⏰ ${mode} Complete!`;
++         }
++         flashState = !flashState;
++     }, 1000);
++     
++     // Stop flashing after 10 seconds if user doesn't interact
++     setTimeout(() => {
++         if (titleFlashInterval) {
++             clearInterval(titleFlashInterval);
++             titleFlashInterval = null;
++             document.title = `Time Up! - ${mode}`;
++         }
++     }, 10000);
++ }
++ 
++ // Clear title flash when user interacts with the timer
++ function clearTitleFlash() {
++     if (titleFlashInterval) {
++         clearInterval(titleFlashInterval);
++         titleFlashInterval = null;
++     }
++ }
++ 
++ // Add event listeners to clear title flash on user interaction
++ startBtn.addEventListener('click', clearTitleFlash);
++ pauseBtn.addEventListener('click', clearTitleFlash);
++ resetBtn.addEventListener('click', clearTitleFlash);
++ modeToggle.addEventListener('change', clearTitleFlash);
+  
+  function notifyUser() {
+```
+
+---
+
+```bash
+open index.html
+```
+
+```
+shenghuang@Sheng-MacBook-Pro Pomodoro % 
+
+```
+
+---
+
+I've updated your Focus Timer to show the countdown in the browser tab and display "Time Up!" when the timer reaches zero. Here's what I added:
+
+### Browser Tab Title Features
+
+1. **Real-Time Timer in Tab**
+   - The browser tab now shows the current time count (e.g., "25:00 - Focus")
+   - Updates every second as the timer counts down
+   - Shows which mode you're in (Focus or Break)
+
+2. **"Time Up!" Alert When Timer Ends**
+   - When the timer reaches zero, the tab title changes to "Time Up!"
+   - Includes an attention-grabbing animation that alternates between:
+     - "Time Up! - Focus" (or Break)
+     - "⏰ Focus Complete!" (with alarm clock emoji)
+
+3. **Smart Handling of Notifications**
+   - Title flashing stops automatically after 10 seconds
+   - Title animation also stops when you interact with any button
+   - The title resets when you start a new timer
+
+This makes your Focus Timer much more useful when you have it in a background tab or if you're working in other applications. You'll be able to see the countdown in your browser tab bar, and the "Time Up!" alert will grab your attention when the timer finishes.
+
+To test it, start the timer and switch to another tab - you'll see the countdown in the browser tab. When it reaches zero, you'll notice the tab title flashing to get your attention.
+
+---
+
+_**User**_
+
+What does git commit -am "first commit" do vs git commit -m "first commit"
+
+---
+
+_**Assistant**_
+
+Both commands create a commit, but they handle file staging differently:
+
+`git commit -m "first commit"`:
+- Only commits files that you've already staged using `git add`
+- Requires you to run `git add` before committing to select which changes to include
+- Good when you want to be selective about what gets committed
+
+`git commit -am "first commit"`:
+- Automatically stages and commits all **tracked** modified files in one step
+- The `-a` flag (short for `--all`) adds all modified files that are already being tracked
+- Saves you from having to run `git add` first
+- Only works on files Git already knows about - new files still need `git add` first
+
+Key difference: The `-a` flag is a shortcut that combines `git add` (for tracked files only) and `git commit` into one command.
+
+For your Focus Timer project, if you wanted to commit all your modified files at once, `git commit -am "Focus Timer project"` would be convenient.
+
+---
+
+_**User**_
+
+I added this app to Github, how do I get it on github pages?
+
+---
+
+_**Assistant**_
+
+I'll guide you through publishing your Focus Timer app on GitHub Pages:
+
+---
+
+```bash
+git remote -v
+```
+
+```
+shenghuang@Sheng-MacBook-Pro Pomodoro % git remote -v
+origin  https://github.com/silvermindmapper/BYOA-Pomodoro.git (fetch)
+origin  https://github.com/silvermindmapper/BYOA-Pomodoro.git (push)
+shenghuang@Sheng-MacBook-Pro Pomodoro %
+```
+
+---
+
+To publish your Focus Timer app on GitHub Pages, you have two main options:
+
+### Option 1: Deploy from the main branch (simplest approach)
+
+1. Go to your GitHub repository settings:
+   - Visit: https://github.com/silvermindmapper/BYOA-Pomodoro/settings
+   - Click on "Pages" in the left sidebar
+
+2. Under "Source":
+   - Select "Deploy from a branch"
+   - Choose "main" as your branch
+   - Select "/ (root)" as the folder
+   - Click "Save"
+
+3. Wait a few minutes for GitHub to build your site
+   - Your app will be available at: https://silvermindmapper.github.io/BYOA-Pomodoro/
+
+### Option 2: Create a dedicated gh-pages branch (more advanced)
+
+---
+
 
 
 ---
